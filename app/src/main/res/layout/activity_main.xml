@@ -9,11 +9,6 @@
     <com.github.mikephil.charting.charts.CandleStickChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="4dp" />
-
-    <WebView
-        android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

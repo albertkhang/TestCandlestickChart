@@ -2,16 +2,16 @@ package com.albertkhang.testcandlestickchart
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mEntries: MutableList<CandleEntry>
@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         addControl()
         addEvent()
     }
@@ -27,24 +28,48 @@ class MainActivity : AppCompatActivity() {
     private fun addControl() {
         initialEntries()
 
+        chart.isHighlightPerDragEnabled = true
+        chart.setDrawBorders(true)
 
-        val candleData = CandleData(initialDataSet())
-        chart.data = candleData
+        chart.setBorderColor(R.color.colorText)
+        val yAxis: YAxis = chart.getAxisLeft()
+        val rightAxis: YAxis = chart.getAxisRight()
+        yAxis.setDrawGridLines(true)
+        rightAxis.setDrawGridLines(false)
+        rightAxis.setDrawLabels(false)
+        chart.requestDisallowInterceptTouchEvent(true)
 
-        //Sets the background color that will cover the whole chart-view.
-        chart.setBackgroundColor(resources.getColor(R.color.colorBackgroundChart))
+        val xAxis: XAxis = chart.getXAxis()
 
-        //Set a description text that appears in the bottom right corner of the chart.
-        val des = Description()
-        //setText
-        des.text = "This is description"
-        //setColor
-        des.textColor = resources.getColor(R.color.colorText)
-        chart.description = des
+        xAxis.setDrawGridLines(false) // disable x axis grid lines
 
-        //If enabled, the background rectangle behind the chart drawing-area will be drawn.
-        chart.setDrawGridBackground(false)
+        xAxis.setDrawLabels(true)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        rightAxis.textColor = Color.BLUE
+        yAxis.setDrawLabels(true)
+        xAxis.granularity = 1f
+        xAxis.isGranularityEnabled = true
+        xAxis.setAvoidFirstLastClipping(true)
 
+        val l: Legend = chart.getLegend()
+        l.isEnabled = false
+
+        val set1 = initialDataSet()
+//        set1.color = Color.rgb(80, 80, 80)
+//        set1.shadowColor = resources.getColor(R.color.colorBackgroundChart)
+//        set1.shadowWidth = 1f
+//        set1.decreasingColor = resources.getColor(R.color.colorDecrease)
+//        set1.decreasingPaintStyle = Paint.Style.FILL
+//        set1.increasingColor = resources.getColor(R.color.colorIncrease)
+//        set1.increasingPaintStyle = Paint.Style.FILL
+//        set1.neutralColor = Color.RED
+//        set1.setDrawValues(false)
+
+// create a data object with the datasets
+        val data = CandleData(set1)
+
+// set data
+        chart.setData(data)
         chart.invalidate()
     }
 
@@ -52,13 +77,14 @@ class MainActivity : AppCompatActivity() {
         val candleDataSet = CandleDataSet(mEntries, "BTC Market")
         candleDataSet.axisDependency = YAxis.AxisDependency.LEFT
         candleDataSet.shadowColorSameAsCandle = true
-        candleDataSet.shadowWidth = 2f
+        candleDataSet.shadowWidth = 1f
         candleDataSet.decreasingColor = resources.getColor(R.color.colorDecrease)
-        candleDataSet.decreasingPaintStyle = Paint.Style.FILL_AND_STROKE
+        candleDataSet.decreasingPaintStyle = Paint.Style.FILL
         candleDataSet.increasingColor = resources.getColor(R.color.colorIncrease)
         candleDataSet.increasingPaintStyle = Paint.Style.FILL
         candleDataSet.neutralColor = Color.BLUE
-        candleDataSet.color = resources.getColor(R.color.colorText)
+        candleDataSet.valueTextColor = resources.getColor(R.color.colorText)
+        candleDataSet.setColors(R.color.colorText)
 
         return candleDataSet
     }
