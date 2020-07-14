@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.albertkhang.testcandlestickchart.charts.CandleStickChart;
+import com.albertkhang.testcandlestickchart.components.LimitLine;
 import com.albertkhang.testcandlestickchart.components.XAxis;
 import com.albertkhang.testcandlestickchart.components.YAxis;
 import com.albertkhang.testcandlestickchart.data.CandleData;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private CandleStickChart chart;
+    private int mSize = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,18 @@ public class MainActivity extends AppCompatActivity {
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
         chart.setMaxVisibleValueCount(60);
+        chart.setAutoScaleMinMaxEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
         chart.setPinchZoom(false);
 
         chart.setDrawGridBackground(false);
+        if (mSize <= 10) {
+            chart.setScaleMinima(1, 1);
+        } else {
+            chart.setScaleMinima(mSize / 10, 1);
+            Log.d("scale", "scaleX: " + mSize / 10);
+        }
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -42,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         YAxis leftAxis = chart.getAxisLeft();
 //        leftAxis.setEnabled(false);
-        leftAxis.setLabelCount(7, false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setDrawAxisLine(false);
+        leftAxis.setLabelCount(10, true);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setDrawAxisLine(true);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -54,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<CandleEntry> values = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < mSize; i++) {
             float val = (float) (Math.random() * 40);
 
             float high = (float) (Math.random() * 9) + 8f;
@@ -79,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
 //        set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(Color.DKGRAY);
-        set1.setShadowWidth(2f);
+        set1.setShadowWidth(1f);
         set1.setDecreasingColor(getResources().getColor(R.color.colorDecreasing));
         set1.setDecreasingPaintStyle(Paint.Style.FILL);
         set1.setIncreasingColor(getResources().getColor(R.color.colorIncreasing));
@@ -88,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         set1.setShowCandleBar(true);
         set1.setShadowColorSameAsCandle(true);
 //        set1.setBarSpace(1f);
-        set1.setHighlightLineWidth(2f);
+        set1.setHighlightLineWidth(1f);
 
         CandleData data = new CandleData(set1);
 
