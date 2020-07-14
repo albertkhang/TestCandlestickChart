@@ -3,10 +3,4 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-
-    <color name="colorBackgroundChart">#1c1c1e</color>
-    <color name="colorText">#a6a7ac</color>
-
-    <color name="colorIncrease">#16721b</color>
-    <color name="colorDecrease">#9f191a</color>
 </resources>
