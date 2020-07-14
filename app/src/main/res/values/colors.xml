@@ -7,6 +7,6 @@
     <color name="colorBackgroundChart">#1c1c1e</color>
     <color name="colorText">#a6a7ac</color>
 
-    <color name="colorIncrease">#16721b</color>
-    <color name="colorDecrease">#9f191a</color>
+    <color name="colorIncrease">#2ecc71</color>
+    <color name="colorDecrease">#e74c3c</color>
 </resources>
