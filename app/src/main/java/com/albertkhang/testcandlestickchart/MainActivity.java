@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.albertkhang.testcandlestickchart.charts.CandleStickChart;
 import com.albertkhang.testcandlestickchart.components.XAxis;
@@ -78,13 +79,16 @@ public class MainActivity extends AppCompatActivity {
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
 //        set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(Color.DKGRAY);
-        set1.setShadowWidth(0.7f);
-        set1.setDecreasingColor(Color.RED);
+        set1.setShadowWidth(2f);
+        set1.setDecreasingColor(getResources().getColor(R.color.colorDecreasing));
         set1.setDecreasingPaintStyle(Paint.Style.FILL);
-        set1.setIncreasingColor(Color.rgb(122, 242, 84));
-        set1.setIncreasingPaintStyle(Paint.Style.STROKE);
+        set1.setIncreasingColor(getResources().getColor(R.color.colorIncreasing));
+        set1.setIncreasingPaintStyle(Paint.Style.FILL);
         set1.setNeutralColor(Color.BLUE);
-        //set1.setHighlightLineWidth(1f);
+        set1.setShowCandleBar(true);
+        set1.setShadowColorSameAsCandle(true);
+//        set1.setBarSpace(1f);
+        set1.setHighlightLineWidth(2f);
 
         CandleData data = new CandleData(set1);
 

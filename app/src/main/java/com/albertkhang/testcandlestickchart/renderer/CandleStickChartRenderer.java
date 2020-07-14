@@ -1,9 +1,12 @@
 package com.albertkhang.testcandlestickchart.renderer;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.R;
 import com.albertkhang.testcandlestickchart.animation.ChartAnimator;
 import com.albertkhang.testcandlestickchart.data.CandleData;
 import com.albertkhang.testcandlestickchart.data.CandleEntry;
@@ -64,7 +67,13 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         mXBounds.set(mChart, dataSet);
 
+        //set stroke for all shadow and body
         mRenderPaint.setStrokeWidth(dataSet.getShadowWidth());
+
+        //data of stroke out of body
+        Paint mRenderBodyStrokePaint = new Paint(mRenderPaint);
+        mRenderBodyStrokePaint.setStyle(Paint.Style.STROKE);
+        mRenderBodyStrokePaint.setStrokeWidth(4f);
 
         // draw the body
         for (int j = mXBounds.min; j <= mXBounds.range + mXBounds.min; j++) {
@@ -83,6 +92,9 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             final float low = e.getLow();
 
             if (showCandleBar) {
+                //reset stroke
+//                mRenderPaint.setStrokeWidth(dataSet.getShadowWidth());
+
                 // calculate the shadow
 
                 mShadowBuffers[0] = xPos;
@@ -91,6 +103,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 mShadowBuffers[6] = xPos;
 
                 if (open > close) {
+                    //@phaseY là pha của Y, mặc định bằng 1 đối với candlestick
                     mShadowBuffers[1] = high * phaseY;
                     mShadowBuffers[3] = open * phaseY;
                     mShadowBuffers[5] = low * phaseY;
@@ -106,6 +119,9 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                     mShadowBuffers[5] = low * phaseY;
                     mShadowBuffers[7] = mShadowBuffers[3];
                 }
+
+//                Log.d("shadow", "phaseY: " + phaseY);
+//                Log.d("shadow", "high: " + high + ", mShadowBuffers[1]: " + mShadowBuffers[1]);
 
                 trans.pointValuesToPixel(mShadowBuffers);
 
@@ -149,9 +165,16 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 // calculate the body
 
                 mBodyBuffers[0] = xPos - 0.5f + barSpace;
-                mBodyBuffers[1] = close * phaseY;
+                mBodyBuffers[1] = open * phaseY;
                 mBodyBuffers[2] = (xPos + 0.5f - barSpace);
-                mBodyBuffers[3] = open * phaseY;
+                mBodyBuffers[3] = close * phaseY;
+
+//                Log.d("body", "xPos: " + xPos + ", barSpace: " + barSpace + ", phaseY: " + phaseY);
+//
+//                Log.d("bodyBuffer", "mBodyBuffers[0]: " + mBodyBuffers[0]);
+//                Log.d("bodyBuffer", "mBodyBuffers[1]: " + mBodyBuffers[1]);
+//                Log.d("bodyBuffer", "mBodyBuffers[2]: " + mBodyBuffers[2]);
+//                Log.d("bodyBuffer", "mBodyBuffers[3]: " + mBodyBuffers[3]);
 
                 trans.pointValuesToPixel(mBodyBuffers);
 
@@ -167,9 +190,16 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                     mRenderPaint.setStyle(dataSet.getDecreasingPaintStyle());
 
                     c.drawRect(
-                            mBodyBuffers[0], mBodyBuffers[3],
-                            mBodyBuffers[2], mBodyBuffers[1],
+                            mBodyBuffers[0], mBodyBuffers[1],
+                            mBodyBuffers[2], mBodyBuffers[3],
                             mRenderPaint);
+
+//                    //draw stroke out of body
+                    mRenderBodyStrokePaint.setColor(Color.argb(255, 255, 0, 0));
+                    c.drawRect(
+                            mBodyBuffers[0], mBodyBuffers[1],
+                            mBodyBuffers[2], mBodyBuffers[3],
+                            mRenderBodyStrokePaint);
 
                 } else if (open < close) {
 
@@ -185,6 +215,13 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                             mBodyBuffers[0], mBodyBuffers[1],
                             mBodyBuffers[2], mBodyBuffers[3],
                             mRenderPaint);
+
+//                    //draw stroke out of body
+                    mRenderBodyStrokePaint.setColor(Color.argb(255, 0, 255, 0));
+                    c.drawRect(
+                            mBodyBuffers[0], mBodyBuffers[1],
+                            mBodyBuffers[2], mBodyBuffers[3],
+                            mRenderBodyStrokePaint);
                 } else { // equal values
 
                     if (dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE) {
@@ -197,6 +234,13 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                             mBodyBuffers[0], mBodyBuffers[1],
                             mBodyBuffers[2], mBodyBuffers[3],
                             mRenderPaint);
+
+//                    //draw stroke out of body
+                    mRenderBodyStrokePaint.setColor(Color.argb(255, 0, 0, 255));
+                    c.drawRect(
+                            mBodyBuffers[0], mBodyBuffers[1],
+                            mBodyBuffers[2], mBodyBuffers[3],
+                            mRenderBodyStrokePaint);
                 }
             } else {
 
@@ -309,8 +353,8 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                         Utils.drawImage(
                                 c,
                                 icon,
-                                (int)(x + iconsOffset.x),
-                                (int)(y + iconsOffset.y),
+                                (int) (x + iconsOffset.x),
+                                (int) (y + iconsOffset.y),
                                 icon.getIntrinsicWidth(),
                                 icon.getIntrinsicHeight());
                     }
