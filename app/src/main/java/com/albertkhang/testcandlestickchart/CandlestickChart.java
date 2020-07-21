@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 
-public class CandlestickChart extends View {
+public class CandlestickChart extends View implements View.OnTouchListener {
     private static final String TAG = "CandlestickChart";
 
     private CandlestickSettings mSettings;
@@ -28,6 +30,7 @@ public class CandlestickChart extends View {
     public CandlestickChart(Context context) {
         super(context);
         mUtils = new Utils(context);
+        setOnTouchListener(this);
     }
 
     @Override
@@ -37,13 +40,13 @@ public class CandlestickChart extends View {
 
         drawGridBackground(canvas);
         drawBaseAxis(canvas);
-        drawBaseAxisText(canvas);
+        drawBaseAxisLabel(canvas);
     }
 
     private float[] mGridLabelBuffer = new float[2];
     private TextPaint mGridLabelPaint;
 
-    private void drawBaseAxisText(Canvas c) {
+    private void drawBaseAxisLabel(Canvas c) {
         mGridLabelPaint = new TextPaint();
         mGridLabelPaint.setColor(mUtils.getColorInt(mSettings.getAxisLabelColorId()));
         mGridLabelPaint.setTextSize(mSettings.getAxisLabelSize() * mUtils.getDensity());
@@ -161,5 +164,33 @@ public class CandlestickChart extends View {
 
     public void setItems(ArrayList<CandleItem> mItems) {
         this.mItems = mItems;
+    }
+
+    private float dX, dY;
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+                Log.d(TAG, "ACTION_DOWN getX " + view.getX() + ", getRawX " + event.getRawX());
+                dX = view.getX() - event.getRawX();
+                dY = view.getY() - event.getRawY();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+//                Log.d(TAG, "ACTION_MOVE " + event.getRawX() + dX + ", " + event.getRawY() + dY);
+
+                view.animate()
+                        .x(event.getRawX() + dX > 0 ? 0 : event.getRawX() + dX)
+//                        .y(event.getRawY() + dY)
+                        .setDuration(0)
+                        .start();
+                break;
+        }
+
+        return true;
     }
 }
