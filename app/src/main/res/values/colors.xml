@@ -3,4 +3,8 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="colorAxisLabel">#5c5e6a</color>
+    <color name="colorGridBackground">#f0f3fa</color>
+    <color name="colorBaseAxis">#787a86</color>
 </resources>

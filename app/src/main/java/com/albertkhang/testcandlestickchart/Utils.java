@@ -10,12 +10,10 @@ public class Utils {
 
     public Utils(Context mContext) {
         this.mContext = mContext;
+        mDensity = mContext.getResources().getDisplayMetrics().density;
     }
 
     public float getDensity() {
-        if (mDensity == 0) {
-            mDensity = mContext.getResources().getDisplayMetrics().density;
-        }
         return mDensity;
     }
 

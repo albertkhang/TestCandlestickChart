@@ -9,13 +9,51 @@ public class CandlestickSettings {
     private int mAxisWidth = 4;
     private int mGridWidth = 2;
 
+    private int mXAxisLabelMargin = 10;
+    private int mYAxisLabelMargin = 10;
+
     private int mAxisColorId = R.color.colorPrimaryDark;
     private int mGridColorId = R.color.colorPrimary;
+
+    private int mAxisLabelColorId = R.color.colorPrimary;
+    private int mAxisLabelSize = 13;
 
     private Context mContext;
 
     public CandlestickSettings(Context context) {
         this.mContext = context;
+    }
+
+    public int getAxisLabelSize() {
+        return mAxisLabelSize;
+    }
+
+    public void setAxisLabelSize(int mAxisLabelSize) {
+        this.mAxisLabelSize = mAxisLabelSize;
+    }
+
+    public int getAxisLabelColorId() {
+        return mAxisLabelColorId;
+    }
+
+    public void setAxisLabelColorId(int mAxisLabelColorId) {
+        this.mAxisLabelColorId = mAxisLabelColorId;
+    }
+
+    public int getXAxisLabelMargin() {
+        return mXAxisLabelMargin;
+    }
+
+    public void setXAxisLabelMargin(int mXAxisLabelMargin) {
+        this.mXAxisLabelMargin = mXAxisLabelMargin;
+    }
+
+    public int getYAxisLabelMargin() {
+        return mYAxisLabelMargin;
+    }
+
+    public void setYAxisLabelMargin(int mYAxisLabelMargin) {
+        this.mYAxisLabelMargin = mYAxisLabelMargin;
     }
 
     public int getAxisMargin() {

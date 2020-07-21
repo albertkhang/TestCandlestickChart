@@ -2,6 +2,7 @@ package com.albertkhang.testcandlestickchart;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -18,8 +19,14 @@ public class MainActivity extends AppCompatActivity {
         mItems = new ArrayList<>();
         mChart = new CandlestickChart(this);
         mSettings = new CandlestickSettings(this);
-        mSettings.setAxisMargin(20);
         mSettings.setGridMargin(50);
+        mSettings.setAxisMargin(20);
+        mSettings.setXAxisLabelMargin(16);
+        mSettings.setYAxisLabelMargin(10);
+        mSettings.setAxisLabelColorId(R.color.colorAxisLabel);
+        mSettings.setAxisColorId(R.color.colorBaseAxis);
+        mSettings.setGridColorId(R.color.colorGridBackground);
+        mSettings.setGridWidth(4);
 
 //        for (int i = 0; i < mSize; i++) {
 //            float val = (float) (Math.random() * 40);
