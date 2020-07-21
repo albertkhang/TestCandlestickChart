@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         mChart = new CandlestickChart(this);
         mSettings = new CandlestickSettings(this);
         mSettings.setAxisMargin(20);
+        mSettings.setGridMargin(50);
 
 //        for (int i = 0; i < mSize; i++) {
 //            float val = (float) (Math.random() * 40);

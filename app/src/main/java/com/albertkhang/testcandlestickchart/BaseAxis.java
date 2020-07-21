@@ -30,4 +30,37 @@ public class BaseAxis {
         }
         return mBaseYAxis;
     }
+
+    public int getMaxXGrid() {
+        if (mSettings != null) {
+            float measuredWidth = mView.getMeasuredWidth() / mUtils.getDensity();
+            float maxWidth = measuredWidth - mSettings.getAxisMargin();
+            int max = 0;
+
+            while (maxWidth > 0) {
+                max++;
+                maxWidth -= mSettings.getGridMargin();
+            }
+
+            return max;
+        }
+
+        return 0;
+    }
+
+    public int getMaxYGrid() {
+        if (mSettings != null) {
+            float measuredHeight = mView.getMeasuredHeight() / mUtils.getDensity();
+            float maxHeight = measuredHeight - mSettings.getAxisMargin();
+            int max = 0;
+
+            while (maxHeight > 0) {
+                max++;
+                maxHeight -= mSettings.getGridMargin();
+            }
+
+            return max;
+        }
+        return 0;
+    }
 }
