@@ -10,7 +10,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class CandlestickChart extends View implements View.OnTouchListener {
+public class CandlestickChart extends View {
     private static final String TAG = "CandlestickChart";
 
     private CandlestickSettings mSettings;
@@ -30,7 +30,6 @@ public class CandlestickChart extends View implements View.OnTouchListener {
     public CandlestickChart(Context context) {
         super(context);
         mUtils = new Utils(context);
-        setOnTouchListener(this);
     }
 
     @Override
@@ -164,33 +163,5 @@ public class CandlestickChart extends View implements View.OnTouchListener {
 
     public void setItems(ArrayList<CandleItem> mItems) {
         this.mItems = mItems;
-    }
-
-    private float dX, dY;
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "ACTION_DOWN getX " + view.getX() + ", getRawX " + event.getRawX());
-                dX = view.getX() - event.getRawX();
-                dY = view.getY() - event.getRawY();
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_DOWN:
-            case MotionEvent.ACTION_POINTER_UP:
-                break;
-            case MotionEvent.ACTION_MOVE:
-//                Log.d(TAG, "ACTION_MOVE " + event.getRawX() + dX + ", " + event.getRawY() + dY);
-
-                view.animate()
-                        .x(event.getRawX() + dX > 0 ? 0 : event.getRawX() + dX)
-//                        .y(event.getRawY() + dY)
-                        .setDuration(0)
-                        .start();
-                break;
-        }
-
-        return true;
     }
 }
