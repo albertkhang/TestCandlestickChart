@@ -392,7 +392,7 @@ public class YAxis extends AxisBase {
      * Returns true if autoscale restriction for axis min value is enabled
      */
     @Deprecated
-    public boolean isUseAutoScaleMinRestriction( ) {
+    public boolean isUseAutoScaleMinRestriction() {
         return mUseAutoScaleRestrictionMin;
     }
 
@@ -400,7 +400,7 @@ public class YAxis extends AxisBase {
      * Sets autoscale restriction for axis min value as enabled/disabled
      */
     @Deprecated
-    public void setUseAutoScaleMinRestriction( boolean isEnabled ) {
+    public void setUseAutoScaleMinRestriction(boolean isEnabled) {
         mUseAutoScaleRestrictionMin = isEnabled;
     }
 
@@ -416,10 +416,9 @@ public class YAxis extends AxisBase {
      * Sets autoscale restriction for axis max value as enabled/disabled
      */
     @Deprecated
-    public void setUseAutoScaleMaxRestriction( boolean isEnabled ) {
+    public void setUseAutoScaleMaxRestriction(boolean isEnabled) {
         mUseAutoScaleRestrictionMax = isEnabled;
     }
-
 
     @Override
     public void calculate(float dataMin, float dataMax) {
@@ -429,20 +428,14 @@ public class YAxis extends AxisBase {
 
         // Make sure max is greater than min
         // Discussion: https://github.com/danielgindi/Charts/pull/3650#discussion_r221409991
-        if (min > max)
-        {
-            if (mCustomAxisMax && mCustomAxisMin)
-            {
+        if (min > max) {
+            if (mCustomAxisMax && mCustomAxisMin) {
                 float t = min;
                 min = max;
                 max = t;
-            }
-            else if (mCustomAxisMax)
-            {
+            } else if (mCustomAxisMax) {
                 min = max < 0f ? max * 1.5f : max * 0.5f;
-            }
-            else if (mCustomAxisMin)
-            {
+            } else if (mCustomAxisMin) {
                 max = min < 0f ? min * 0.5f : min * 1.5f;
             }
         }

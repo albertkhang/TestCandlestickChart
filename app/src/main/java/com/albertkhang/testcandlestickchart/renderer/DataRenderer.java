@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
+import android.util.Log;
 
 import com.albertkhang.testcandlestickchart.animation.ChartAnimator;
 import com.albertkhang.testcandlestickchart.highlight.Highlight;
@@ -12,6 +13,8 @@ import com.albertkhang.testcandlestickchart.interfaces.dataprovider.ChartInterfa
 import com.albertkhang.testcandlestickchart.interfaces.datasets.IDataSet;
 import com.albertkhang.testcandlestickchart.utils.Utils;
 import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
 
 /**
  * Superclass of all render classes for the different data types (line, bar, ...).
@@ -45,6 +48,7 @@ public abstract class DataRenderer extends Renderer {
 
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(viewPortHandler);
+        Log.d(FLOW_TAG, "DataRenderer init");
         this.mAnimator = animator;
 
         mRenderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

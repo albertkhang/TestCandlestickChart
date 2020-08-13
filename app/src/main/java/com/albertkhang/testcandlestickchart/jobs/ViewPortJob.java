@@ -1,8 +1,10 @@
 
 package com.albertkhang.testcandlestickchart.jobs;
 
+import android.util.Log;
 import android.view.View;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.utils.ObjectPool;
 import com.albertkhang.testcandlestickchart.utils.Transformer;
 import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
@@ -28,6 +30,7 @@ public abstract class ViewPortJob extends ObjectPool.Poolable implements Runnabl
 
     public ViewPortJob(ViewPortHandler viewPortHandler, float xValue, float yValue,
                        Transformer trans, View v) {
+        Log.d(MainActivity.FLOW_TAG, "ViewPortJob init");
 
         this.mViewPortHandler = viewPortHandler;
         this.xValue = xValue;

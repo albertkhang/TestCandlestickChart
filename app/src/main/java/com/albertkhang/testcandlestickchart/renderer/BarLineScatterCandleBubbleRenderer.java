@@ -1,5 +1,7 @@
 package com.albertkhang.testcandlestickchart.renderer;
 
+import android.util.Log;
+
 import com.albertkhang.testcandlestickchart.animation.ChartAnimator;
 import com.albertkhang.testcandlestickchart.data.DataSet;
 import com.albertkhang.testcandlestickchart.data.Entry;
@@ -85,12 +87,18 @@ public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
             float low = chart.getLowestVisibleX();
             float high = chart.getHighestVisibleX();
 
+            Log.d("logMinMaxRange", "phaseX " + phaseX + ", low " + low + ", high " + high);
+
             Entry entryFrom = dataSet.getEntryForXValue(low, Float.NaN, DataSet.Rounding.DOWN);
             Entry entryTo = dataSet.getEntryForXValue(high, Float.NaN, DataSet.Rounding.UP);
+
+            Log.d("logMinMaxRange", "entryFrom " + entryFrom + ", entryTo " + entryTo);
 
             min = entryFrom == null ? 0 : dataSet.getEntryIndex(entryFrom);
             max = entryTo == null ? 0 : dataSet.getEntryIndex(entryTo);
             range = (int) ((max - min) * phaseX);
+
+            Log.d("logMinMaxRange", "min " + min + ", max " + max + ", range " + range);
         }
     }
 }

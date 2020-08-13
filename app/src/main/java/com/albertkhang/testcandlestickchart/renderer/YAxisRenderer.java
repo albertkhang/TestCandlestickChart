@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.components.LimitLine;
 import com.albertkhang.testcandlestickchart.components.YAxis;
 import com.albertkhang.testcandlestickchart.components.YAxis.AxisDependency;
@@ -29,7 +31,7 @@ public class YAxisRenderer extends AxisRenderer {
 
         this.mYAxis = yAxis;
 
-        if(mViewPortHandler != null) {
+        if (mViewPortHandler != null) {
 
             mAxisLabelPaint.setColor(Color.BLACK);
             mAxisLabelPaint.setTextSize(Utils.convertDpToPixel(10f));
@@ -90,6 +92,7 @@ public class YAxisRenderer extends AxisRenderer {
 
     @Override
     public void renderAxisLine(Canvas c) {
+        Log.i(MainActivity.FLOW_TAG, "YAxisRenderer renderAxisLine");
 
         if (!mYAxis.isEnabled() || !mYAxis.isDrawAxisLineEnabled())
             return;
@@ -104,6 +107,11 @@ public class YAxisRenderer extends AxisRenderer {
             c.drawLine(mViewPortHandler.contentRight(), mViewPortHandler.contentTop(), mViewPortHandler.contentRight(),
                     mViewPortHandler.contentBottom(), mAxisLinePaint);
         }
+
+        Log.i(MainActivity.VALUE_TAG, "YAxisRenderer mViewPortHandler left: " + mViewPortHandler.contentLeft()
+                + ", top: " + mViewPortHandler.contentTop()
+                + ", right: " + mViewPortHandler.contentRight()
+                + ", bot: " + mViewPortHandler.contentBottom());
     }
 
     /**
@@ -134,6 +142,7 @@ public class YAxisRenderer extends AxisRenderer {
     }
 
     protected Path mRenderGridLinesPath = new Path();
+
     @Override
     public void renderGridLines(Canvas c) {
 
@@ -195,6 +204,7 @@ public class YAxisRenderer extends AxisRenderer {
     }
 
     protected float[] mGetTransformedPositionsBuffer = new float[2];
+
     /**
      * Transforms the values contained in the axis entries to screen pixels and returns them in form of a float array
      * of x- and y-coordinates.
@@ -203,7 +213,7 @@ public class YAxisRenderer extends AxisRenderer {
      */
     protected float[] getTransformedPositions() {
 
-        if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2){
+        if (mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2) {
             mGetTransformedPositionsBuffer = new float[mYAxis.mEntryCount * 2];
         }
         float[] positions = mGetTransformedPositionsBuffer;
@@ -251,6 +261,7 @@ public class YAxisRenderer extends AxisRenderer {
     protected Path mRenderLimitLines = new Path();
     protected float[] mRenderLimitLinesBuffer = new float[2];
     protected RectF mLimitLineClippingRect = new RectF();
+
     /**
      * Draws the LimitLines associated with this axis to the screen.
      *

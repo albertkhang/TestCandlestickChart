@@ -3,7 +3,10 @@ package com.albertkhang.testcandlestickchart.utils;
 
 import android.graphics.Matrix;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
 
 /**
  * Class that contains information about the charts current viewport settings, including offsets, scale & translation
@@ -91,14 +94,26 @@ public class ViewPortHandler {
      */
 
     public void setChartDimens(float width, float height) {
+        Log.i(FLOW_TAG, "ViewPortHandler setChartDimens");
+
+        Log.i("offset", "left " + mContentRect.left
+                + ", top " + mContentRect.top
+                + ", right " + mContentRect.right
+                + ", bottom " + mContentRect.bottom
+                + ", w: " + mChartWidth
+                + ", h: " + mChartHeight);
 
         float offsetLeft = this.offsetLeft();
         float offsetTop = this.offsetTop();
         float offsetRight = this.offsetRight();
         float offsetBottom = this.offsetBottom();
 
+//        Log.d("setChartDimens", "offsetLeft " + offsetLeft + ", offsetTop " + offsetTop + ", offsetRight " + offsetRight + ", offsetBottom " + offsetBottom);
+
         mChartHeight = height;
         mChartWidth = width;
+
+        Log.i("setChartDimens", "height " + height + ", width " + width);
 
         restrainViewPort(offsetLeft, offsetTop, offsetRight, offsetBottom);
     }
@@ -112,6 +127,12 @@ public class ViewPortHandler {
 
     public void restrainViewPort(float offsetLeft, float offsetTop, float offsetRight,
                                  float offsetBottom) {
+        Log.d(FLOW_TAG, "ViewPortHandler restrainViewPort");
+        Log.i("offset", "left: " + offsetLeft
+                + ", top: " + offsetTop
+                + ", right: " + (mChartWidth - offsetRight)
+                + ", bottom: " + (mChartHeight - offsetBottom));
+
         mContentRect.set(offsetLeft, offsetTop, mChartWidth - offsetRight, mChartHeight
                 - offsetBottom);
     }
@@ -225,6 +246,7 @@ public class ViewPortHandler {
 
     /**
      * Zooms out to original size.
+     *
      * @param outputMatrix
      */
     public void resetZoom(Matrix outputMatrix) {

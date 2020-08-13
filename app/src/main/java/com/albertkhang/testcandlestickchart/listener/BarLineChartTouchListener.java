@@ -8,6 +8,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.charts.BarLineChartBase;
 import com.albertkhang.testcandlestickchart.charts.HorizontalBarChart;
 import com.albertkhang.testcandlestickchart.data.BarLineScatterCandleBubbleData;
@@ -41,12 +42,12 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     /**
      * point where the touch action started
      */
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0,0);
+    private MPPointF mTouchStartPoint = MPPointF.getInstance(0, 0);
 
     /**
      * center between two pointers (fingers on the display)
      */
-    private MPPointF mTouchPointCenter = MPPointF.getInstance(0,0);
+    private MPPointF mTouchPointCenter = MPPointF.getInstance(0, 0);
 
     private float mSavedXDist = 1f;
     private float mSavedYDist = 1f;
@@ -60,8 +61,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private VelocityTracker mVelocityTracker;
 
     private long mDecelerationLastTime = 0;
-    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0,0);
-    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0,0);
+    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0, 0);
+    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0, 0);
 
     /**
      * the distance of movement that will be counted as a drag
@@ -118,6 +119,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             case MotionEvent.ACTION_DOWN:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_DOWN");
 
                 startAction(event);
 
@@ -128,6 +130,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_POINTER_DOWN");
 
                 if (event.getPointerCount() >= 2) {
 
@@ -163,8 +166,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 break;
 
             case MotionEvent.ACTION_MOVE:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_MOVE");
 
                 if (mTouchMode == DRAG) {
+                    Log.i(MainActivity.TOUCH_TAG, "DRAG");
 
                     mChart.disableScroll();
 
@@ -174,6 +179,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     performDrag(event, x, y);
 
                 } else if (mTouchMode == X_ZOOM || mTouchMode == Y_ZOOM || mTouchMode == PINCH_ZOOM) {
+                    Log.i(MainActivity.TOUCH_TAG, "X_ZOOM, Y_ZOOM, PINCH_ZOOM");
 
                     mChart.disableScroll();
 
@@ -183,6 +189,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 } else if (mTouchMode == NONE
                         && Math.abs(distance(event.getX(), mTouchStartPoint.x, event.getY(),
                         mTouchStartPoint.y)) > mDragTriggerDist) {
+                    Log.i(MainActivity.TOUCH_TAG, "NONE");
 
                     if (mChart.isDragEnabled()) {
 
@@ -218,6 +225,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 break;
 
             case MotionEvent.ACTION_UP:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_UP");
 
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 final int pointerId = event.getPointerId(0);
@@ -269,12 +277,15 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                 break;
             case MotionEvent.ACTION_POINTER_UP:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_POINTER_UP");
+
                 Utils.velocityTrackerPointerUpCleanUpIfNecessary(event, mVelocityTracker);
 
                 mTouchMode = POST_ZOOM;
                 break;
 
             case MotionEvent.ACTION_CANCEL:
+                Log.i(MainActivity.TOUCH_TAG, "ACTION_CANCEL");
 
                 mTouchMode = NONE;
                 endAction(event);

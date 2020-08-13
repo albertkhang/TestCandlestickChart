@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.components.XAxis.XAxisPosition;
 import com.albertkhang.testcandlestickchart.components.YAxis;
 import com.albertkhang.testcandlestickchart.components.YAxis.AxisDependency;
@@ -35,6 +36,9 @@ import com.albertkhang.testcandlestickchart.utils.MPPointD;
 import com.albertkhang.testcandlestickchart.utils.MPPointF;
 import com.albertkhang.testcandlestickchart.utils.Transformer;
 import com.albertkhang.testcandlestickchart.utils.Utils;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
+import static com.albertkhang.testcandlestickchart.MainActivity.VALUE_TAG;
 
 /**
  * Base-class of LineChart, BarChart, ScatterChart and CandleStickChart.
@@ -153,6 +157,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     protected void init() {
         super.init();
+        Log.d(FLOW_TAG, "BarLineChartBase init");
 
         mAxisLeft = new YAxis(AxisDependency.LEFT);
         mAxisRight = new YAxis(AxisDependency.RIGHT);
@@ -188,6 +193,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.d(FLOW_TAG, "BarLineChartBase onDraw draw chart and label");
 
         if (mData == null)
             return;
@@ -195,25 +201,50 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         long starttime = System.currentTimeMillis();
 
         // execute all drawing commands
+        //vẽ background dưới grid và border cho grid
         drawGridBackground(canvas);
 
         if (mAutoScaleMinMaxEnabled) {
             autoScale();
         }
 
-        if (mAxisLeft.isEnabled())
-            mAxisRendererLeft.computeAxis(mAxisLeft.mAxisMinimum, mAxisLeft.mAxisMaximum, mAxisLeft.isInverted());
+        float axisMin = 0f;
+        float axisMax = 0f;
+        boolean isInverted = false;
 
-        if (mAxisRight.isEnabled())
-            mAxisRendererRight.computeAxis(mAxisRight.mAxisMinimum, mAxisRight.mAxisMaximum, mAxisRight.isInverted());
+        if (mAxisLeft.isEnabled()) {
+            axisMin = mAxisLeft.mAxisMinimum;
+            axisMax = mAxisLeft.mAxisMaximum;
+            isInverted = mAxisLeft.isInverted();
+            Log.i(VALUE_TAG, "BarLineChartBase mAxisLeft axisMin: " + axisMin + ", axisMax: " + axisMax + ", isInverted: " + isInverted);
 
-        if (mXAxis.isEnabled())
-            mXAxisRenderer.computeAxis(mXAxis.mAxisMinimum, mXAxis.mAxisMaximum, false);
+            mAxisRendererLeft.computeAxis(axisMin, axisMax, isInverted);
+        }
 
+        if (mAxisRight.isEnabled()) {
+            axisMin = mAxisRight.mAxisMinimum;
+            axisMax = mAxisRight.mAxisMaximum;
+            isInverted = mAxisRight.isInverted();
+            Log.i(VALUE_TAG, "mAxisRight axisMin: " + axisMin + ", axisMax: " + axisMax + ", isInverted: " + isInverted);
+
+            mAxisRendererRight.computeAxis(axisMin, axisMax, isInverted);
+        }
+
+        if (mXAxis.isEnabled()) {
+            axisMin = mXAxis.mAxisMinimum;
+            axisMax = mXAxis.mAxisMaximum;
+            isInverted = false;
+            Log.i(VALUE_TAG, "BarLineChartBase mXAxis axisMin: " + axisMin + ", axisMax: " + axisMax + ", isInverted: " + isInverted);
+
+            mXAxisRenderer.computeAxis(axisMin, axisMax, isInverted);
+        }
+
+        //draw X, Y Axis
         mXAxisRenderer.renderAxisLine(canvas);
         mAxisRendererLeft.renderAxisLine(canvas);
         mAxisRendererRight.renderAxisLine(canvas);
 
+        //draw grid
         if (mXAxis.isDrawGridLinesBehindDataEnabled())
             mXAxisRenderer.renderGridLines(canvas);
 
@@ -268,6 +299,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         if (mAxisRight.isEnabled() && !mAxisRight.isDrawLimitLinesBehindDataEnabled())
             mAxisRendererRight.renderLimitLines(canvas);
 
+        //draw X, Y Axis label
         mXAxisRenderer.renderAxisLabels(canvas);
         mAxisRendererLeft.renderAxisLabels(canvas);
         mAxisRendererRight.renderAxisLabels(canvas);
@@ -308,6 +340,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     protected void prepareValuePxMatrix() {
+        Log.d(FLOW_TAG, "BarLineChartBase prepareValuePxMatrix");
 
         if (mLogEnabled)
             Log.i(LOG_TAG, "Preparing Value-Px Matrix, xmin: " + mXAxis.mAxisMinimum + ", xmax: "
@@ -324,6 +357,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     protected void prepareOffsetMatrix() {
+        Log.d(FLOW_TAG, "BarLineChartBase prepareOffsetMatrix");
 
         mRightAxisTransformer.prepareMatrixOffset(mAxisRight.isInverted());
         mLeftAxisTransformer.prepareMatrixOffset(mAxisLeft.isInverted());
@@ -331,6 +365,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     @Override
     public void notifyDataSetChanged() {
+        Log.d(FLOW_TAG, "BarLineChartBase notifyDataSetChanged");
 
         if (mData == null) {
             if (mLogEnabled)
@@ -360,6 +395,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * Performs auto scaling of the axis by recalculating the minimum and maximum y-values based on the entries currently in view.
      */
     protected void autoScale() {
+        Log.d(FLOW_TAG, "BarLineChartBase autoScale");
 
         final float fromX = getLowestVisibleX();
         final float toX = getHighestVisibleX();
@@ -383,16 +419,21 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     @Override
     protected void calcMinMax() {
+        Log.d(FLOW_TAG, "BarLineChartBase calcMinMax");
 
         mXAxis.calculate(mData.getXMin(), mData.getXMax());
+//        Log.d("calcMinMax", "mXAxis getXMin " + mData.getXMin() + ", getXMax " + mData.getXMax());
+
 
         // calculate axis range (min / max) according to provided data
         mAxisLeft.calculate(mData.getYMin(AxisDependency.LEFT), mData.getYMax(AxisDependency.LEFT));
+//        Log.d("calcMinMax", "mAxisLeft getXMin " + mData.getYMin(AxisDependency.LEFT) + ", getXMax " + mData.getYMax(AxisDependency.LEFT));
         mAxisRight.calculate(mData.getYMin(AxisDependency.RIGHT), mData.getYMax(AxisDependency
                 .RIGHT));
     }
 
     protected void calculateLegendOffsets(RectF offsets) {
+        Log.i(FLOW_TAG, "BarLineChartBase calculateLegendOffsets");
 
         offsets.left = 0.f;
         offsets.right = 0.f;
@@ -470,12 +511,18 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     @Override
     public void calculateOffsets() {
+        Log.d(FLOW_TAG, "BarLineChartBase calculateOffsets");
 
         if (!mCustomViewPortEnabled) {
 
             float offsetLeft = 0f, offsetRight = 0f, offsetTop = 0f, offsetBottom = 0f;
 
             calculateLegendOffsets(mOffsetsBuffer);
+
+            Log.i("offsetcalculateOffsets", "1 left: " + offsetLeft
+                    + ", top: " + offsetTop
+                    + ", right: " + offsetRight
+                    + ", bottom: " + offsetBottom);
 
             offsetLeft += mOffsetsBuffer.left;
             offsetTop += mOffsetsBuffer.top;
@@ -513,12 +560,23 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                 }
             }
 
+            Log.i("offsetcalculateOffsets", "2 left: " + offsetLeft
+                    + ", top: " + offsetTop
+                    + ", right: " + offsetRight
+                    + ", bottom: " + offsetBottom);
+
             offsetTop += getExtraTopOffset();
             offsetRight += getExtraRightOffset();
             offsetBottom += getExtraBottomOffset();
             offsetLeft += getExtraLeftOffset();
 
+            //set minOffset là 45
             float minOffset = Utils.convertDpToPixel(mMinOffset);
+
+            Log.i("offsetcalculateOffsets", "3 left: " + Math.max(minOffset, offsetLeft)
+                    + ", top: " + Math.max(minOffset, offsetTop)
+                    + ", right: " + Math.max(minOffset, offsetRight)
+                    + ", bottom: " + Math.max(minOffset, offsetBottom));
 
             mViewPortHandler.restrainViewPort(
                     Math.max(minOffset, offsetLeft),
@@ -541,13 +599,14 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      * draws the grid background
      */
     protected void drawGridBackground(Canvas c) {
+        Log.d(FLOW_TAG, "BarLineChartBase drawGridBackground");
 
+        //có đặt màu nền  ở dưới grid hay không
         if (mDrawGridBackground) {
-
             // draw the grid background
             c.drawRect(mViewPortHandler.getContentRect(), mGridBackgroundPaint);
         }
-
+        //có vẽ khung cho grid hay không
         if (mDrawBorders) {
             c.drawRect(mViewPortHandler.getContentRect(), mBorderPaint);
         }
@@ -1235,8 +1294,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When disabled, the data and/or highlights will not be clipped to contentRect. Disabling this option can
-     *   be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
-     *   that there is unwanted clipping.
+     * be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
+     * that there is unwanted clipping.
      *
      * @param enabled
      */
@@ -1256,8 +1315,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When disabled, the data and/or highlights will not be clipped to contentRect. Disabling this option can
-     *   be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
-     *   that there is unwanted clipping.
+     * be useful, when the data lies fully within the content rect, but is drawn in such a way (such as thick lines)
+     * that there is unwanted clipping.
      *
      * @return
      */
@@ -1649,6 +1708,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(FLOW_TAG, "BarLineChartBase onSizeChanged");
+        Log.d("screenSize", "w: " + w + ", h: " + h + ", oldw: " + oldw + ", oldh: " + oldh);
 
         // Saving current position of chart.
         mOnSizeChangedBuffer[0] = mOnSizeChangedBuffer[1] = 0;

@@ -3,6 +3,7 @@ package com.albertkhang.testcandlestickchart.data;
 import android.graphics.Typeface;
 import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.components.YAxis.AxisDependency;
 import com.albertkhang.testcandlestickchart.formatter.ValueFormatter;
 import com.albertkhang.testcandlestickchart.highlight.Highlight;
@@ -66,6 +67,8 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param dataSets
      */
     public ChartData(T... dataSets) {
+        Log.i(MainActivity.FLOW_TAG, "ChartData init");
+
         mDataSets = arrayToList(dataSets);
         notifyDataChanged();
     }
@@ -103,6 +106,8 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * the contained data has changed.
      */
     public void notifyDataChanged() {
+        Log.i(MainActivity.FLOW_TAG, "ChartData notifyDataChanged");
+
         calcMinMax();
     }
 
@@ -114,6 +119,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param toX   the x-value to which the calculation should be performed
      */
     public void calcMinMaxY(float fromX, float toX) {
+        Log.i(MainActivity.FLOW_TAG, "ChartData calcMinMaxY(float fromX, float toX)");
 
         for (T set : mDataSets) {
             set.calcMinMaxY(fromX, toX);
@@ -127,10 +133,18 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * Calc minimum and maximum values (both x and y) over all DataSets.
      */
     protected void calcMinMax() {
+        Log.i(MainActivity.FLOW_TAG, "ChartData calcMinMax()");
 
         if (mDataSets == null)
             return;
 
+//        Log.i(MainActivity.VALUE_TAG, "mYMax: " + mYMax + ", mYMin: " + mYMin + ", mXMax: " + mXMax + ", mXMin: " + mXMin);
+//        Log.i(MainActivity.VALUE_TAG, "dataSet mYMax: " + mDataSets.get(0).getYMax()
+//                + ", mYMin: " + mDataSets.get(0).getYMin()
+//                + ", mXMax: " + mDataSets.get(0).getXMax()
+//                + ", mXMin: " + mDataSets.get(0).getXMin());
+
+        //giá trị min max của toàn bộ data
         mYMax = -Float.MAX_VALUE;
         mYMin = Float.MAX_VALUE;
         mXMax = -Float.MAX_VALUE;
@@ -451,6 +465,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param axis
      */
     protected void calcMinMax(Entry e, AxisDependency axis) {
+        Log.i(MainActivity.FLOW_TAG, "ChartData calcMinMax");
 
         if (mYMax < e.getY())
             mYMax = e.getY();
@@ -482,6 +497,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
      * @param d
      */
     protected void calcMinMax(T d) {
+        Log.i(MainActivity.FLOW_TAG, "ChartData calcMinMax(T d)");
 
         if (mYMax < d.getYMax())
             mYMax = d.getYMax();

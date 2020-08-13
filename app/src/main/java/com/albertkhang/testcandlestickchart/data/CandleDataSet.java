@@ -2,7 +2,9 @@
 package com.albertkhang.testcandlestickchart.data;
 
 import android.graphics.Paint;
+import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.interfaces.datasets.ICandleDataSet;
 import com.albertkhang.testcandlestickchart.utils.ColorTemplate;
 import com.albertkhang.testcandlestickchart.utils.Utils;
@@ -75,6 +77,7 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
 
     public CandleDataSet(List<CandleEntry> yVals, String label) {
         super(yVals, label);
+        Log.i(MainActivity.FLOW_TAG, "CandleDataSet init");
     }
 
     @Override
@@ -105,6 +108,7 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
 
     @Override
     protected void calcMinMax(CandleEntry e) {
+//        Log.i(MainActivity.FLOW_TAG, "CandleDataSet calcMinMax(CandleEntry e)");
 
         if (e.getLow() < mYMin)
             mYMin = e.getLow();

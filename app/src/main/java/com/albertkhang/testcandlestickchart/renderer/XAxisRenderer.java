@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.components.LimitLine;
 import com.albertkhang.testcandlestickchart.components.XAxis;
 import com.albertkhang.testcandlestickchart.components.XAxis.XAxisPosition;
@@ -18,6 +20,8 @@ import com.albertkhang.testcandlestickchart.utils.Utils;
 import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
 
 import java.util.List;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
 
 public class XAxisRenderer extends AxisRenderer {
 
@@ -41,6 +45,7 @@ public class XAxisRenderer extends AxisRenderer {
 
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
+        Log.i(FLOW_TAG, "XAxisRenderer computeAxis");
 
         // calculate the starting and entry point of the y-labels (depending on
         // zoom / contentrect bounds)
@@ -68,12 +73,14 @@ public class XAxisRenderer extends AxisRenderer {
 
     @Override
     protected void computeAxisValues(float min, float max) {
+        Log.i(FLOW_TAG, "XAxisRenderer computeAxisValues");
         super.computeAxisValues(min, max);
 
         computeSize();
     }
 
     protected void computeSize() {
+        Log.i(FLOW_TAG, "XAxisRenderer computeSize");
 
         String longest = mXAxis.getLongestLabel();
 
@@ -112,7 +119,7 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
         mAxisLabelPaint.setColor(mXAxis.getTextColor());
 
-        MPPointF pointF = MPPointF.getInstance(0,0);
+        MPPointF pointF = MPPointF.getInstance(0, 0);
         if (mXAxis.getPosition() == XAxisPosition.TOP) {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
@@ -146,6 +153,7 @@ public class XAxisRenderer extends AxisRenderer {
 
     @Override
     public void renderAxisLine(Canvas c) {
+        Log.i(MainActivity.FLOW_TAG, "XAxisRenderer renderAxisLine");
 
         if (!mXAxis.isDrawAxisLineEnabled() || !mXAxis.isEnabled())
             return;
@@ -229,8 +237,10 @@ public class XAxisRenderer extends AxisRenderer {
     protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
         Utils.drawXAxisValue(c, formattedLabel, x, y, mAxisLabelPaint, anchor, angleDegrees);
     }
+
     protected Path mRenderGridLinesPath = new Path();
     protected float[] mRenderGridLinesBuffer = new float[2];
+
     @Override
     public void renderGridLines(Canvas c) {
 
@@ -240,7 +250,7 @@ public class XAxisRenderer extends AxisRenderer {
         int clipRestoreCount = c.save();
         c.clipRect(getGridClippingRect());
 
-        if(mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2){
+        if (mRenderGridLinesBuffer.length != mAxis.mEntryCount * 2) {
             mRenderGridLinesBuffer = new float[mXAxis.mEntryCount * 2];
         }
         float[] positions = mRenderGridLinesBuffer;

@@ -2,8 +2,10 @@ package com.albertkhang.testcandlestickchart.jobs;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.View;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.utils.ObjectPool;
 import com.albertkhang.testcandlestickchart.utils.Transformer;
 import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
@@ -22,6 +24,8 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
     }
 
     public static AnimatedMoveViewJob getInstance(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v, float xOrigin, float yOrigin, long duration){
+        Log.i(MainActivity.FLOW_TAG, "AnimatedMoveViewJob getInstance");
+
         AnimatedMoveViewJob result = pool.get();
         result.mViewPortHandler = viewPortHandler;
         result.xValue = xValue;

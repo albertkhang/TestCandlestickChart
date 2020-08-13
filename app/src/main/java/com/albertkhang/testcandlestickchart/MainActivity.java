@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.charts.BarLineChartBase;
 import com.albertkhang.testcandlestickchart.charts.CandleStickChart;
 import com.albertkhang.testcandlestickchart.components.LimitLine;
 import com.albertkhang.testcandlestickchart.components.XAxis;
@@ -20,12 +22,17 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private CandleStickChart chart;
     private int mSize = 100;
+    public static final String FLOW_TAG = "flowLog";
+    public static final String VALUE_TAG = "valueLog";
+    public static final String TOUCH_TAG = "touchLog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(FLOW_TAG, "MainActivity onCreate");
         chart = new CandleStickChart(this);
 //        setContentView(R.layout.activity_main);
+
         setContentView(chart);
         chart.setBackgroundColor(Color.WHITE);
 
@@ -35,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         chart.setAutoScaleMinMaxEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
-        chart.setPinchZoom(false);
+        chart.setPinchZoom(true);
 
         chart.setDrawGridBackground(false);
         if (mSize <= 10) {
@@ -47,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(true);
 
         YAxis leftAxis = chart.getAxisLeft();
 //        leftAxis.setEnabled(false);
-        leftAxis.setLabelCount(10, true);
+        leftAxis.setLabelCount(10, false);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawAxisLine(true);
 
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         rightAxis.setEnabled(false);
 //        rightAxis.setStartAtZero(false);
 
+        //Bật tắt chú thích của chart. Ví dụ: màu xanh là gì, màu đỏ là gì
         chart.getLegend().setEnabled(false);
 
         ArrayList<CandleEntry> values = new ArrayList<>();
@@ -100,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
         set1.setHighlightLineWidth(1f);
 
         CandleData data = new CandleData(set1);
+
+        chart.setAutoScaleMinMaxEnabled(false);
+        chart.setDrawBorders(false);
+        chart.setDrawGridBackground(false);
 
         chart.setData(data);
         chart.invalidate();

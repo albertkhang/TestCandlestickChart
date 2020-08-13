@@ -11,6 +11,8 @@ import com.albertkhang.testcandlestickchart.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
+
 /**
  * Base-class of all axes (previously called labels).
  *
@@ -760,6 +762,7 @@ public abstract class AxisBase extends ComponentBase {
      * @param dataMax the max value according to chart data
      */
     public void calculate(float dataMin, float dataMax) {
+        Log.d(FLOW_TAG, "AxisBase calculate");
 
         // if custom, use value as is, else use data value
         float min = mCustomAxisMin ? mAxisMinimum : (dataMin - mSpaceMin);

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.R;
 import com.albertkhang.testcandlestickchart.animation.ChartAnimator;
 import com.albertkhang.testcandlestickchart.data.CandleData;
@@ -23,6 +24,8 @@ import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
 
 import java.util.List;
 
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
+
 public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     protected CandleDataProvider mChart;
@@ -36,6 +39,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
     public CandleStickChartRenderer(CandleDataProvider chart, ChartAnimator animator,
                                     ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
+        Log.d(FLOW_TAG, "CandleStickChartRenderer init");
         mChart = chart;
     }
 
@@ -46,6 +50,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     @Override
     public void drawData(Canvas c) {
+        Log.i(FLOW_TAG, "CandleStickChartRenderer drawData");
 
         CandleData candleData = mChart.getCandleData();
 
@@ -298,6 +303,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     @Override
     public void drawValues(Canvas c) {
+        Log.d(FLOW_TAG, "CandleStickChartRenderer drawValues(Canvas c)");
 
         // if values are drawn
         if (isDrawingValuesAllowed(mChart)) {
@@ -367,6 +373,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     @Override
     public void drawValue(Canvas c, String valueText, float x, float y, int color) {
+        Log.d(FLOW_TAG, "CandleStickChartRenderer drawValue(Canvas, String, float, float, int)");
         mValuePaint.setColor(color);
         c.drawText(valueText, x, y, mValuePaint);
     }
@@ -377,6 +384,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
     @Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {
+        Log.d(FLOW_TAG, "CandleStickChartRenderer drawHighlighted");
 
         CandleData candleData = mChart.getCandleData();
 

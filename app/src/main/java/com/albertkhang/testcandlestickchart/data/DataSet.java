@@ -1,6 +1,10 @@
 
 package com.albertkhang.testcandlestickchart.data;
 
+import android.util.Log;
+
+import com.albertkhang.testcandlestickchart.MainActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      */
     public DataSet(List<T> entries, String label) {
         super(label);
+        Log.i(MainActivity.FLOW_TAG, "DataSet init");
         this.mEntries = entries;
 
         if (mEntries == null)
@@ -60,6 +65,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
     @Override
     public void calcMinMax() {
+        Log.i(MainActivity.FLOW_TAG, "DataSet calcMinMax()");
 
         mYMax = -Float.MAX_VALUE;
         mYMin = Float.MAX_VALUE;
@@ -69,16 +75,30 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         if (mEntries == null || mEntries.isEmpty())
             return;
 
+//        Log.i(MainActivity.VALUE_TAG, "calcMinMax mYMax: " + mYMax
+//                + ", mYMin: " + mYMin
+//                + ", mXMax: " + mXMax
+//                + ", mXMin: " + mXMin);
+
+        Log.i(MainActivity.FLOW_TAG, "loop CandleDataSet calcMinMax(CandleEntry e) and DataSet calcMinMaxX(T e)");
+
         for (T e : mEntries) {
             calcMinMax(e);
         }
+
+//        Log.i(MainActivity.VALUE_TAG, "DataSet calcMinMax() mYMax: " + mYMax
+//                + ", mYMin: " + mYMin
+//                + ", mXMax: " + mXMax
+//                + ", mXMin: " + mXMin);
     }
 
     @Override
     public void calcMinMaxY(float fromX, float toX) {
+        Log.i(MainActivity.FLOW_TAG, "DataSet calcMinMaxY(float fromX, float toX)");
+
         mYMax = -Float.MAX_VALUE;
         mYMin = Float.MAX_VALUE;
-        
+
         if (mEntries == null || mEntries.isEmpty())
             return;
 
@@ -100,6 +120,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      * @param e
      */
     protected void calcMinMax(T e) {
+        Log.i(MainActivity.FLOW_TAG, "DataSet calcMinMax(T e)");
 
         if (e == null)
             return;
@@ -110,6 +131,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     protected void calcMinMaxX(T e) {
+//        Log.i(MainActivity.FLOW_TAG, "DataSet calcMinMaxX(T e)");
 
         if (e.getX() < mXMin)
             mXMin = e.getX();
@@ -119,6 +141,7 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     }
 
     protected void calcMinMaxY(T e) {
+        Log.i(MainActivity.FLOW_TAG, "DataSet calcMinMaxY(T e)");
 
         if (e.getY() < mYMin)
             mYMin = e.getY();
@@ -181,7 +204,6 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     public abstract DataSet<T> copy();
 
     /**
-     *
      * @param dataSet
      */
     protected void copy(DataSet dataSet) {

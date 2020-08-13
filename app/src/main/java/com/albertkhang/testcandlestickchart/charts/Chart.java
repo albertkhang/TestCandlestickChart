@@ -24,6 +24,7 @@ import android.view.ViewParent;
 
 import androidx.annotation.RequiresApi;
 
+import com.albertkhang.testcandlestickchart.MainActivity;
 import com.albertkhang.testcandlestickchart.animation.ChartAnimator;
 import com.albertkhang.testcandlestickchart.animation.Easing.EasingFunction;
 import com.albertkhang.testcandlestickchart.components.Description;
@@ -53,6 +54,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
 
 /**
  * Baseclass of all Chart-Views.
@@ -203,6 +206,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * initialize all paints and stuff
      */
     protected void init() {
+        Log.d(FLOW_TAG, "Chart init");
 
         setWillNotDraw(false);
         // setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -238,40 +242,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             Log.i("", "Chart.init()");
     }
 
-    // public void initWithDummyData() {
-    // ColorTemplate template = new ColorTemplate();
-    // template.addColorsForDataSets(ColorTemplate.COLORFUL_COLORS,
-    // getContext());
-    //
-    // setColorTemplate(template);
-    // setDrawYValues(false);
-    //
-    // ArrayList<String> xVals = new ArrayList<String>();
-    // Calendar calendar = Calendar.getInstance();
-    // for (int i = 0; i < 12; i++) {
-    // xVals.add(calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-    // Locale.getDefault()));
-    // }
-    //
-    // ArrayList<DataSet> dataSets = new ArrayList<DataSet>();
-    // for (int i = 0; i < 3; i++) {
-    //
-    // ArrayList<Entry> yVals = new ArrayList<Entry>();
-    //
-    // for (int j = 0; j < 12; j++) {
-    // float val = (float) (Math.random() * 100);
-    // yVals.add(new Entry(val, j));
-    // }
-    //
-    // DataSet set = new DataSet(yVals, "DataSet " + i);
-    // dataSets.add(set); // add the datasets
-    // }
-    // // create a data object with the datasets
-    // ChartData data = new ChartData(xVals, dataSets);
-    // setData(data);
-    // invalidate();
-    // }
-
     /**
      * Sets a new data object for the chart. The data object contains all values
      * and information needed for displaying.
@@ -279,6 +249,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @param data
      */
     public void setData(T data) {
+        Log.d(FLOW_TAG, "Chart setData");
 
         mData = data;
         mOffsetsCalculated = false;
@@ -367,6 +338,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * drawn in the chart (if enabled), and creates the default-value-formatter
      */
     protected void setupDefaultFormatter(float min, float max) {
+        Log.d(FLOW_TAG, "Chart setupDefaultFormatter");
 
         float reference = 0f;
 
@@ -391,6 +363,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @Override
     protected void onDraw(Canvas canvas) {
         // super.onDraw(canvas);
+        Log.i(FLOW_TAG, "Chart onDraw");
 
         if (mData == null) {
 
@@ -566,9 +539,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
      * This method will call the listener.
-     * @param x The x-value to highlight
+     *
+     * @param x            The x-value to highlight
      * @param dataSetIndex The dataset index to search in
-     * @param dataIndex The data index to search in (only used in CombinedChartView currently)
+     * @param dataIndex    The data index to search in (only used in CombinedChartView currently)
      */
     public void highlightValue(float x, int dataSetIndex, int dataIndex) {
         highlightValue(x, dataSetIndex, dataIndex, true);
@@ -578,7 +552,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
      * This method will call the listener.
-     * @param x The x-value to highlight
+     *
+     * @param x            The x-value to highlight
      * @param dataSetIndex The dataset index to search in
      */
     public void highlightValue(float x, int dataSetIndex) {
@@ -589,10 +564,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * Highlights the value at the given x-value and y-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
      * This method will call the listener.
-     * @param x The x-value to highlight
-     * @param y The y-value to highlight. Supply `NaN` for "any"
+     *
+     * @param x            The x-value to highlight
+     * @param y            The y-value to highlight. Supply `NaN` for "any"
      * @param dataSetIndex The dataset index to search in
-     * @param dataIndex The data index to search in (only used in CombinedChartView currently)
+     * @param dataIndex    The data index to search in (only used in CombinedChartView currently)
      */
     public void highlightValue(float x, float y, int dataSetIndex, int dataIndex) {
         highlightValue(x, y, dataSetIndex, dataIndex, true);
@@ -602,8 +578,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * Highlights the value at the given x-value and y-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
      * This method will call the listener.
-     * @param x The x-value to highlight
-     * @param y The y-value to highlight. Supply `NaN` for "any"
+     *
+     * @param x            The x-value to highlight
+     * @param y            The y-value to highlight. Supply `NaN` for "any"
      * @param dataSetIndex The dataset index to search in
      */
     public void highlightValue(float x, float y, int dataSetIndex) {
@@ -613,9 +590,10 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     /**
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
-     * @param x The x-value to highlight
+     *
+     * @param x            The x-value to highlight
      * @param dataSetIndex The dataset index to search in
-     * @param dataIndex The data index to search in (only used in CombinedChartView currently)
+     * @param dataIndex    The data index to search in (only used in CombinedChartView currently)
      * @param callListener Should the listener be called for this change
      */
     public void highlightValue(float x, int dataSetIndex, int dataIndex, boolean callListener) {
@@ -625,7 +603,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     /**
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
-     * @param x The x-value to highlight
+     *
+     * @param x            The x-value to highlight
      * @param dataSetIndex The dataset index to search in
      * @param callListener Should the listener be called for this change
      */
@@ -636,10 +615,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     /**
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
-     * @param x The x-value to highlight
-     * @param y The y-value to highlight. Supply `NaN` for "any"
+     *
+     * @param x            The x-value to highlight
+     * @param y            The y-value to highlight. Supply `NaN` for "any"
      * @param dataSetIndex The dataset index to search in
-     * @param dataIndex The data index to search in (only used in CombinedChartView currently)
+     * @param dataIndex    The data index to search in (only used in CombinedChartView currently)
      * @param callListener Should the listener be called for this change
      */
     public void highlightValue(float x, float y, int dataSetIndex, int dataIndex, boolean callListener) {
@@ -654,8 +634,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     /**
      * Highlights any y-value at the given x-value in the given DataSet.
      * Provide -1 as the dataSetIndex to undo all highlighting.
-     * @param x The x-value to highlight
-     * @param y The y-value to highlight. Supply `NaN` for "any"
+     *
+     * @param x            The x-value to highlight
+     * @param y            The y-value to highlight. Supply `NaN` for "any"
      * @param dataSetIndex The dataset index to search in
      * @param callListener Should the listener be called for this change
      */
@@ -910,7 +891,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      *
      * @param durationMillisX
      * @param durationMillisY
-     * @param easing         a custom easing function to be used on the animation phase
+     * @param easing          a custom easing function to be used on the animation phase
      */
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easing) {
@@ -1300,6 +1281,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * @return
      */
     public Legend getLegend() {
+        Log.d("chart.getLegend", "mLegend " + mLegend.getEntries().length);
         return mLegend;
     }
 
@@ -1542,7 +1524,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     public boolean saveToPath(String title, String pathOnSD) {
 
 
-
         Bitmap b = getChartBitmap();
 
         OutputStream stream = null;
@@ -1733,6 +1714,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(FLOW_TAG, "Chart onSizeChanged");
+
         if (mLogEnabled)
             Log.i(LOG_TAG, "OnSizeChanged()");
 

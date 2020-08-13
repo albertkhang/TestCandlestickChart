@@ -5,12 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.util.Log;
 
 import com.albertkhang.testcandlestickchart.components.AxisBase;
 import com.albertkhang.testcandlestickchart.utils.MPPointD;
 import com.albertkhang.testcandlestickchart.utils.Transformer;
 import com.albertkhang.testcandlestickchart.utils.Utils;
 import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
+
+import static com.albertkhang.testcandlestickchart.MainActivity.FLOW_TAG;
+import static com.albertkhang.testcandlestickchart.MainActivity.VALUE_TAG;
 
 /**
  * Baseclass of all axis renderers.
@@ -19,10 +23,14 @@ import com.albertkhang.testcandlestickchart.utils.ViewPortHandler;
  */
 public abstract class AxisRenderer extends Renderer {
 
-    /** base axis this axis renderer works with */
+    /**
+     * base axis this axis renderer works with
+     */
     protected AxisBase mAxis;
 
-    /** transformer to transform values to screen pixels and return */
+    /**
+     * transformer to transform values to screen pixels and return
+     */
     protected Transformer mTrans;
 
     /**
@@ -47,11 +55,12 @@ public abstract class AxisRenderer extends Renderer {
 
     public AxisRenderer(ViewPortHandler viewPortHandler, Transformer trans, AxisBase axis) {
         super(viewPortHandler);
+        Log.i(FLOW_TAG, "AxisRenderer init");
 
         this.mTrans = trans;
         this.mAxis = axis;
 
-        if(mViewPortHandler != null) {
+        if (mViewPortHandler != null) {
 
             mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -116,11 +125,13 @@ public abstract class AxisRenderer extends Renderer {
      * @param max - the maximum value in the data object for this axis
      */
     public void computeAxis(float min, float max, boolean inverted) {
+        Log.i(FLOW_TAG, "AxisRenderer computeAxis");
+        Log.i(VALUE_TAG, "before AxisRenderer computeAxis min: " + min + ", max: " + max);
 
         // calculate the starting and entry point of the y-labels (depending on
         // zoom / contentrect bounds)
         if (mViewPortHandler != null && mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
-
+            //khi phóng to sẽ vào
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
             MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom());
 
@@ -137,6 +148,7 @@ public abstract class AxisRenderer extends Renderer {
             MPPointD.recycleInstance(p1);
             MPPointD.recycleInstance(p2);
         }
+        Log.i(VALUE_TAG, "after AxisRenderer computeAxis min: " + min + ", max: " + max);
 
         computeAxisValues(min, max);
     }
@@ -147,12 +159,14 @@ public abstract class AxisRenderer extends Renderer {
      * @return
      */
     protected void computeAxisValues(float min, float max) {
+        Log.i(FLOW_TAG, "AxisRenderer computeAxisValues");
 
         float yMin = min;
         float yMax = max;
 
         int labelCount = mAxis.getLabelCount();
         double range = Math.abs(yMax - yMin);
+//        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues labelCount: " + labelCount + ", range: " + range);
 
         if (labelCount == 0 || range <= 0 || Double.isInfinite(range)) {
             mAxis.mEntries = new float[]{};
@@ -162,17 +176,22 @@ public abstract class AxisRenderer extends Renderer {
         }
 
         // Find out how much spacing (in y value space) between axis values
+        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues range: " + range + ", labelCount: " + labelCount);
         double rawInterval = range / labelCount;
         double interval = Utils.roundToNextSignificant(rawInterval);
+        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues rawInterval: " + rawInterval + ", interval: " + interval);
 
         // If granularity is enabled, then do not allow the interval to go below specified granularity.
         // This is used to avoid repeated values when rounding values for display.
         if (mAxis.isGranularityEnabled())
             interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
+        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues isGranularityEnabled interval: " + interval);
 
         // Normalize interval
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
         int intervalSigDigit = (int) (interval / intervalMagnitude);
+        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues Normalize intervalMagnitude: " + intervalMagnitude + ", intervalSigDigit: " + intervalSigDigit);
+
         if (intervalSigDigit > 5) {
             // Use one order of magnitude higher, to avoid intervals like 0.9 or 90
             // if it's 0.0 after floor(), we use the old value
@@ -181,10 +200,12 @@ public abstract class AxisRenderer extends Renderer {
                     : Math.floor(10.0 * intervalMagnitude);
 
         }
+        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues (intervalSigDigit > 5) interval: " + interval);
 
         int n = mAxis.isCenterAxisLabelsEnabled() ? 1 : 0;
 
         // force label count
+        //tính giá trị và set số lượng các label
         if (mAxis.isForceLabelsEnabled()) {
 
             interval = (float) range / (float) (labelCount - 1);
@@ -208,11 +229,12 @@ public abstract class AxisRenderer extends Renderer {
         } else {
 
             double first = interval == 0.0 ? 0.0 : Math.ceil(yMin / interval) * interval;
-            if(mAxis.isCenterAxisLabelsEnabled()) {
+            if (mAxis.isCenterAxisLabelsEnabled()) {
                 first -= interval;
             }
 
             double last = interval == 0.0 ? 0.0 : Utils.nextUp(Math.floor(yMax / interval) * interval);
+            Log.i(VALUE_TAG, "AxisRenderer computeAxisValues isForceLabelsEnabled first: " + first + ", last: " + last);
 
             double f;
             int i;
@@ -221,8 +243,7 @@ public abstract class AxisRenderer extends Renderer {
                 for (f = first; f <= last; f += interval) {
                     ++n;
                 }
-            }
-            else if (last == first && n == 0) {
+            } else if (last == first && n == 0) {
                 n = 1;
             }
 
@@ -248,6 +269,7 @@ public abstract class AxisRenderer extends Renderer {
         } else {
             mAxis.mDecimals = 0;
         }
+//        Log.i(VALUE_TAG, "AxisRenderer computeAxisValues set decimals interval: " + interval + ", mDecimals: " + mAxis.mDecimals);
 
         if (mAxis.isCenterAxisLabelsEnabled()) {
 
@@ -255,7 +277,7 @@ public abstract class AxisRenderer extends Renderer {
                 mAxis.mCenteredEntries = new float[n];
             }
 
-            float offset = (float)interval / 2f;
+            float offset = (float) interval / 2f;
 
             for (int i = 0; i < n; i++) {
                 mAxis.mCenteredEntries[i] = mAxis.mEntries[i] + offset;
