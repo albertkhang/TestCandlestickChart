@@ -56,7 +56,7 @@ public class Chart extends View {
         for (int i = 0; i < mMaxYGrid; i++) {
             canvas.drawLine(75, mPosY + 75 + mSpacing * i, 75 + 1000, mPosY + 75 + mSpacing * i, paint);
         }
-        Log.d(TAG, "onDraw x: " + mPosX + ", y: " + mPosY);
+//        Log.d(TAG, "onDraw x: " + mPosX + ", y: " + mPosY);
 
 //        paint.setStrokeWidth(0);
 //        paint.setTextAlign(Paint.Align.CENTER);
@@ -74,25 +74,33 @@ public class Chart extends View {
             case MotionEvent.ACTION_DOWN:
                 Log.d(TAG, "ACTION_DOWN");
 
-                int pointerIndex = event.getActionIndex();
-                float x = event.getX(pointerIndex);
-                float y = event.getY(pointerIndex);
+//                int pointerIndex = event.getActionIndex();
+                float x = event.getX();
+                float y = event.getY();
+
+//                Log.d(TAG, "ACTION_DOWN pointerIndex: " + pointerIndex + ", x: " + x + ", y: " + y);
+//                Log.d(TAG, "ACTION_DOWN pointerIndex: " + pointerIndex + ", getx: " + event.getX() + ", gety: " + event.getY());
+//                Log.d(TAG, "ACTION_DOWN pointerIndex: " + pointerIndex + ", rawx: " + event.getRawX() + ", rawy: " + event.getRawY());
 
                 // Remember where we started (for dragging)
                 mLastTouchX = x;
                 mLastTouchY = y;
                 // Save the ID of this pointer (for dragging)
-                mActivePointerId = event.getPointerId(0);
+//                mActivePointerId = event.getPointerId(0);
+
+                Log.d(TAG, "ACTION_DOWN mLastTouchX: " + mLastTouchX + ", mLastTouchY: " + mLastTouchY + ", mActivePointerId: " + mActivePointerId);
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, "ACTION_MOVE");
+                Log.d(TAG, "ACTION_MOVE x: " + event.getX() + ", y: " + event.getY());
 
                 // Find the index of the active pointer and fetch its position
-                pointerIndex = event.findPointerIndex(mActivePointerId);
+//                pointerIndex = event.findPointerIndex(mActivePointerId);
 
-                x = event.getX(pointerIndex);
-                y = event.getY(pointerIndex);
+                x = event.getX();
+                y = event.getY();
+
+//                Log.d(TAG, "ACTION_MOVE pointerIndex: " + pointerIndex + ", x: " + x + ", y: " + y);
 
                 // Calculate the distance moved
                 float dx = x - mLastTouchX;
