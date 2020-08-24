@@ -3,6 +3,8 @@ package com.albertkhang.testcandlestickchart;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -48,25 +50,48 @@ public class Chart extends View {
 
         paint.setColor(getResources().getColor(R.color.colorPrimaryDark));
         paint.setStrokeWidth(2);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(40);
 
+        canvas.save();
+
+        //draw X label
+        canvas.clipRect(45, 45, 1035, 2000);
         for (int i = 0; i < mMaxXGrid; i++) {
-            canvas.drawLine(mPosX + 75 + mSpacing * i, 75, mPosX + 75 + mSpacing * i, 75 + 2000, paint);
+            canvas.drawText("" + i, mPosX + mSpacing * i, 1825, paint);
         }
 
+        canvas.restore();
+
+        //draw Y label
+        canvas.clipRect(0, 0, 1035, 2000);
         for (int i = 0; i < mMaxYGrid; i++) {
-            canvas.drawLine(75, mPosY + 75 + mSpacing * i, 75 + 1000, mPosY + 75 + mSpacing * i, paint);
+            canvas.drawText("" + i, 75 - 25, mPosY + mSpacing * (11 - i), paint);
         }
-//        Log.d(TAG, "onDraw x: " + mPosX + ", y: " + mPosY);
 
-//        paint.setStrokeWidth(0);
-//        paint.setTextAlign(Paint.Align.CENTER);
-//        paint.setTextSize(40);
-//        canvas.drawText("(" + mPosX + ", " + y, mPosX, y + 50, paint);
+        //draw base axis
+        canvas.drawLine(75, 45, 75, 1785, paint);
+        canvas.drawLine(75, 1785, 1035, 1785, paint);
+
+        canvas.save();
+
+        canvas.clipRect(75, 45, 1035, 1785);
+
+        //draw X grid
+        for (int i = 1; i < mMaxXGrid; i++) {
+            canvas.drawLine(mPosX + mSpacing * i, 75, mPosX + mSpacing * i, 75 + 1785, paint);
+        }
+        //draw Y grid
+        for (int i = 1; i < mMaxYGrid - 1; i++) {
+            canvas.drawLine(75, mPosY + mSpacing * i, 75 + 1000, mPosY + mSpacing * i, paint);
+        }
+
+        canvas.restore();
     }
 
     private float mPosX = 75, mPosY = 75;
     private float mLastTouchX, mLastTouchY;
-    private int mActivePointerId = 0;
+//    private int mActivePointerId = 0;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -88,7 +113,7 @@ public class Chart extends View {
                 // Save the ID of this pointer (for dragging)
 //                mActivePointerId = event.getPointerId(0);
 
-                Log.d(TAG, "ACTION_DOWN mLastTouchX: " + mLastTouchX + ", mLastTouchY: " + mLastTouchY + ", mActivePointerId: " + mActivePointerId);
+                Log.d(TAG, "ACTION_DOWN mLastTouchX: " + mLastTouchX + ", mLastTouchY: " + mLastTouchY);
                 break;
 
             case MotionEvent.ACTION_MOVE:
