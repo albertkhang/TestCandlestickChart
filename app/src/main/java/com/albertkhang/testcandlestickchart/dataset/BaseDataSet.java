@@ -2,7 +2,6 @@ package com.albertkhang.testcandlestickchart.dataset;
 
 import android.graphics.Paint;
 
-import com.albertkhang.testcandlestickchart.model.ICandleData;
 import com.albertkhang.testcandlestickchart.model.IData;
 import com.albertkhang.testcandlestickchart.model.ILabelData;
 import com.albertkhang.testcandlestickchart.util.ViewPortHandler;
@@ -31,24 +30,14 @@ public abstract class BaseDataSet<T extends IData> {
     protected Paint mGridPaint;
 
     /**
-     * decide max X axis
+     * decide max X label
      */
-    protected int mMaxXAxis = 6;
+    protected int mMaxXLabel = 6;
 
     /**
-     * decide min X axis
+     * decide max Y label
      */
-    protected int mMinXAxis = 6;
-
-    /**
-     * decide max Y axis
-     */
-    protected int mMaxYAxis = 8;
-
-    /**
-     * decide min Y axis
-     */
-    protected int mMinYAxis = 6;
+    protected int mMaxYLabel = 10;
 
     /**
      * contain data list
@@ -147,23 +136,19 @@ public abstract class BaseDataSet<T extends IData> {
         this.mGridPaint.setColor(colorId);
     }
 
+    public float getGridStrokeWidth() {
+        return  this.mGridPaint.getStrokeWidth();
+    }
+
     public void setGridStrokeWidth(float width) {
         this.mGridPaint.setStrokeWidth(width);
     }
 
     public void setMaxXAxis(int max) {
-        this.mMaxXAxis = max;
+        this.mMaxXLabel = max;
     }
 
     public void setMaxYAxis(int max) {
-        this.mMaxYAxis = max;
-    }
-
-    public void setMinXAxis(int min) {
-        this.mMinXAxis = min;
-    }
-
-    public void setMinYAxis(int min) {
-        this.mMinYAxis = min;
+        this.mMaxYLabel = max;
     }
 }

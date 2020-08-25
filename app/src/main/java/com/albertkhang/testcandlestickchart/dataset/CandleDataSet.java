@@ -94,7 +94,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         mViewportHandler = new ViewPortHandler(new RectF(mOffsetLeft, mOffsetTop, mOffsetRight, mOffsetBottom));
 
         calculateChartRange();
-        calculateTwoLabelRange();
+        calculateLabelRange();
 
         if (showInfoLog)
             Log.i(infoLOG, "init mOffsetLeft: " + mOffsetLeft + ", mOffsetTop: " + mOffsetTop + ", mOffsetRight: " + mOffsetRight + ", mOffsetBottom: " + mOffsetBottom);
@@ -104,56 +104,41 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
     }
 
     public void calculateYLabel() {
+        labelData = new ArrayList<>();
         float top = mViewportHandler.getContentRect().top;
         float bottom = mViewportHandler.getContentRect().bottom;
+        float chartRangeValue = Math.abs(mMaxChartHeightValue - mMinChartHeightValue);
+        float dataRangeValue = Math.abs(mMaxHeight - mMinHeight);
+        Log.i("testValue", "mMaxChartHeightValue: " + mMaxChartHeightValue + ", mMinChartHeightValue: " + mMinChartHeightValue);
+        Log.i("testValue", "chartRangeValue: " + chartRangeValue + ", dataRangeValue: " + dataRangeValue);
+
+        //tìm giá trị bắt đầu của label
+        int startDataValue = (int) Math.floor(mMinHeight / 10f) * 10;
+        Log.i("testValue", "startDataValue: " + startDataValue);
+
+        //tìm giá trị bắt đầu của label trong chart
         float chartRange = Math.abs(top - bottom);
-//        Log.i("testValue", "top: " + top + ", bottom: " + bottom + ", chartRange: " + chartRange);
+        float dataRange = chartRange * 0.8f;
+        float padding = Math.abs(chartRange - dataRange) / 2;
+        float startChart = bottom - padding;
+        Log.i("testValue", "startChart: " + startChart + ", dataRange: " + dataRange);
 
-        float valueRange = Math.abs(mMaxChartHeightValue) + Math.abs(mMinChartHeightValue);
-//        Log.i("testValue", "mMaxChartHeightValue: " + mMaxChartHeightValue + ", mMinChartHeightValue: " + mMinChartHeightValue + ", valueRange: " + valueRange);
+        float oneDataUnitInChart = dataRange / dataRangeValue;
+        Log.i("testValue", "oneDataUnitInChart: " + oneDataUnitInChart);
 
-//        Log.i("testValue", "mMaxHeight: " + mMaxHeight + ", mMinHeight: " + mMinHeight);
+        startChart = startChart + Math.abs(mMinChartHeightValue - startDataValue) * oneDataUnitInChart;
+        Log.i("testValue", "startChart: " + startChart + ", mYRange: " + mYRange);
 
-        float startLabelValue = mMinHeight / 10f;
-        startLabelValue = (float) Math.floor(startLabelValue) * 10;
+        int value;
+        float y;
+        for (int i = 0; i < mMaxYLabel; i++) {
+            value = (int) (startDataValue + mYRange * i);
+            y = startChart - mYRange * oneDataUnitInChart * i;
 
-        float pt = chartRange / valueRange;
-//        Log.i("testValue", "1 chartRange = " + pt + " valueRange");
-
-        float startLabelPx = bottom - (startLabelValue - mMinChartHeightValue) * pt;
-        Log.i("testValue", "startLabelValue: " + startLabelValue + ", startLabelPx: " + startLabelPx);
-
-        float temp;
-        labelData = new ArrayList<>();
-        for (int i = 0; i < mMaxYAxis; i++) {
-            temp = startLabelValue + mYRange * i;
-//            Log.i("testValue", "startValue: " + startValue + ", mYRange: " + mYRange + ", temp: " + temp + ", mMaxHeight: " + mMaxHeight);
-
-            if (temp <= mMaxHeight) {
-//                Log.i("testValue", "temp: " + temp + ", " + i + ": " + temp);
-                ILabelData item = new ILabelData((int) temp, startLabelPx - mYRange * pt * i);
-                labelData.add(item);
-//                Log.i("testValue", item.toString());
-            } else {
+            if (y <= top) {
                 break;
-            }
-        }
-
-        if (labelData.size() < mMinYAxis) {
-            labelData.clear();
-
-            for (int i = 0; i < mMaxYAxis; i++) {
-                temp = startLabelValue + mYRange / 2 * i;
-//            Log.i("testValue", "startValue: " + startValue + ", mYRange: " + mYRange + ", temp: " + temp + ", mMaxHeight: " + mMaxHeight);
-
-                if (temp <= mMaxHeight) {
-//                Log.i("testValue", "temp: " + temp + ", " + i + ": " + temp);
-                    ILabelData item = new ILabelData((int) temp, startLabelPx - mYRange * pt * i);
-                    labelData.add(item);
-//                    Log.i("testValue", item.toString());
-                } else {
-                    break;
-                }
+            } else {
+                labelData.add(new ILabelData(value, y));
             }
         }
     }
@@ -161,16 +146,25 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
     /**
      * calculate range between two label
      */
-    private void calculateTwoLabelRange() {
+    private void calculateLabelRange() {
         //Y Axis
-        float rawRange = (Math.abs(mMaxChartHeightValue) + Math.abs(mMinChartHeightValue)) / mMaxYAxis;
-        float range = (float) Math.round(rawRange / 10f);
-        range *= 10;
+        float rawRange = Math.abs(mMaxChartHeightValue - mMinChartHeightValue) / mMaxYLabel;
+        float range;
+        if (rawRange >= mMaxYLabel) {
+            range = (float) Math.round(rawRange / 10f);
+            range *= 10;
+        } else {
+            range = (float) Math.floor(rawRange * 10);
+            range /= 10;
+        }
+        Log.i("testValue", "rawRange: " + rawRange + ", range: " + range);
 
         mYRange = range;
 
+        float dataRangeValue = Math.abs(mMaxHeight - mMinHeight);
+
         //X Axis
-        rawRange = Math.abs(mMaxWidth - mMinWidth) / mMaxXAxis;
+        rawRange = Math.abs(mMaxWidth - mMinWidth) / mMaxXLabel;
         range = (float) Math.round(rawRange / 10f);
         if (range < 1) {
             range = 1;
@@ -184,7 +178,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
      * set new value in mMaxHeight, mMinHeight
      */
     private void calculateChartRange() {
-        float oldRange = Math.abs(mMaxHeight) + Math.abs(mMinHeight);
+        float oldRange = Math.abs(mMaxHeight - mMinHeight);
         float newRange = oldRange / 0.8f;
         float delta = (newRange - oldRange) / 2;
 
@@ -215,7 +209,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         Rect bounds = new Rect();
         int size = mData.size();
         int max = 0;
-        String tmp = "";
+        String tmp;
 
         for (int i = 0; i < size; i++) {
             tmp = String.valueOf(i + 1);
@@ -226,7 +220,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         }
 
         if (max > mOffsetBottom) {
-            mOffsetBottom = max;
+            mOffsetBottom = max + 10;
         }
 
         if (showInfoLog)
@@ -244,7 +238,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         Rect bounds = new Rect();
         int size = mData.size();
         int max = 0;
-        String tmp = "";
+        String tmp;
 
         for (int i = 0; i < size; i++) {
             tmp = String.valueOf(mMaxHeight);
@@ -261,7 +255,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         }
 
         if (max > mOffsetLeft) {
-            mOffsetLeft = max;
+            mOffsetLeft = max + 10;
         }
 
         if (showInfoLog)
