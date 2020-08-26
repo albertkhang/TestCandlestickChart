@@ -100,13 +100,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         this.mShadowPaint.setStrokeWidth(1);
         this.mStrokePaint.setStrokeWidth(1);
 
-        calculateMinMax();
-        calculateOffset();
-
-        mViewportHandler = new ViewPortHandler(new RectF(mOffsetLeft, mOffsetTop, mOffsetRight, mOffsetBottom));
-
-        calculateChartRange();
-        calculateLabelRange();
+        updateData(mData);
 
         if (showInfoLog)
             Log.i(infoLOG, "init mOffsetLeft: " + mOffsetLeft + ", mOffsetTop: " + mOffsetTop + ", mOffsetRight: " + mOffsetRight + ", mOffsetBottom: " + mOffsetBottom);
@@ -128,7 +122,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
         shellRange = (float) Math.floor((chartRange - shellRange / 2) / mMaxXLabel);
         float startX = left;
 
-        for (int i = 0; i <= mMaxXLabel; i++) {
+        for (int i = 0; i < mMaxXLabel + 1; i++) {
             mXLabelData.add(new ILabelData(i, startX + shellRange * i));
         }
     }

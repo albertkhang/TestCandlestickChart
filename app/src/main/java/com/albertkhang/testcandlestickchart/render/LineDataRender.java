@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import com.albertkhang.testcandlestickchart.dataset.BaseDataSet;
 import com.albertkhang.testcandlestickchart.util.ViewPortHandler;
 
-public class LineChartRender extends DataRender {
-    public LineChartRender(BaseDataSet mDataSet, ViewPortHandler viewPortHandler) {
+public class LineDataRender extends DataRender {
+    public LineDataRender(BaseDataSet mDataSet, ViewPortHandler viewPortHandler) {
         super(mDataSet, viewPortHandler);
     }
 

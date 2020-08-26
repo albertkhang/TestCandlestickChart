@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.Log;
 
 import com.albertkhang.testcandlestickchart.dataset.CandleDataSet;
+import com.albertkhang.testcandlestickchart.render.CandlestickDataRender;
 import com.albertkhang.testcandlestickchart.render.LabelRender;
 import com.albertkhang.testcandlestickchart.render.XAxisRender;
 import com.albertkhang.testcandlestickchart.render.YAxisRender;
@@ -16,12 +17,14 @@ public class CandlestickChart extends Chart<CandleDataSet> {
     private LabelRender mLabelRender;
     private YAxisRender mYAxisRender;
     private XAxisRender mXAxisRender;
+    private CandlestickDataRender mDataRender;
 
     public CandlestickChart(Context context, CandleDataSet dataSet) {
         super(context, dataSet);
         mLabelRender = new LabelRender(mDataSet, mViewportHandler);
         mYAxisRender = new YAxisRender(mDataSet, mViewportHandler);
         mXAxisRender = new XAxisRender(mDataSet, mViewportHandler);
+        mDataRender = new CandlestickDataRender(mDataSet, mViewportHandler);
 
         if (showFlowLog)
             Log.d(flowLOG, "CandlestickChart");
@@ -40,5 +43,6 @@ public class CandlestickChart extends Chart<CandleDataSet> {
         mLabelRender.render(canvas);
         mYAxisRender.render(canvas);
         mXAxisRender.render(canvas);
+        mDataRender.render(canvas);
     }
 }

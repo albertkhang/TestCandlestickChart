@@ -116,6 +116,26 @@ public abstract class BaseDataSet<T extends IData> {
         this.mXLabelData = new ArrayList<>();
     }
 
+    public float getMaxHeight() {
+        return mMaxHeight;
+    }
+
+    public float getMinHeight() {
+        return mMinHeight;
+    }
+
+    public float getMaxChartHeightValue() {
+        return mMaxChartHeightValue;
+    }
+
+    public float getMinChartHeightValue() {
+        return mMinChartHeightValue;
+    }
+
+    public ArrayList<T> getData() {
+        return mData;
+    }
+
     protected abstract void updateData(ArrayList<T> data);
 
     public ViewPortHandler getViewportHandler() {

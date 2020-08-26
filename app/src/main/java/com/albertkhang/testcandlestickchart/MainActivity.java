@@ -14,7 +14,7 @@ import com.albertkhang.testcandlestickchart.model.ICandleData;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private int mSize = 20;
+    private int mSize = 6;
 
     private FrameLayout chart_frame;
     private Button btnCreateNew;
