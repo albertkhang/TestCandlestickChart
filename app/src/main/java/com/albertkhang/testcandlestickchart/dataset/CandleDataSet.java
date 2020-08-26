@@ -70,10 +70,22 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
      */
     private boolean isShadowSameStrokeColor = false;
 
-    public CandleDataSet(ArrayList<ICandleData> candleDataList) {
+    public CandleDataSet(ArrayList<ICandleData> data) {
         super();
-        this.mData = candleDataList;
+        this.mData = data;
         init();
+    }
+
+    @Override
+    public void updateData(ArrayList<ICandleData> data) {
+        this.mData = data;
+        calculateMinMax();
+        calculateOffset();
+
+        mViewportHandler = new ViewPortHandler(new RectF(mOffsetLeft, mOffsetTop, mOffsetRight, mOffsetBottom));
+
+        calculateChartRange();
+        calculateLabelRange();
     }
 
     private void init() {
@@ -103,31 +115,50 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
             Log.d(flowLOG, "CandleDataSet init");
     }
 
+    public void calculateXLabel() {
+        mXLabelData.clear();
+
+        float left = mViewportHandler.getContentRect().left;
+        float bottom = mViewportHandler.getContentRect().bottom;
+        float right = mViewportHandler.getContentRect().right;
+
+        //tính kích thước của một shell
+        float chartRange = Math.abs(left - right);
+        float shellRange = (float) Math.floor(chartRange / mMaxXLabel);
+        shellRange = (float) Math.floor((chartRange - shellRange / 2) / mMaxXLabel);
+        float startX = left;
+
+        for (int i = 0; i <= mMaxXLabel; i++) {
+            mXLabelData.add(new ILabelData(i, startX + shellRange * i));
+        }
+    }
+
     public void calculateYLabel() {
-        labelData = new ArrayList<>();
+        mYLabelData.clear();
+
         float top = mViewportHandler.getContentRect().top;
         float bottom = mViewportHandler.getContentRect().bottom;
         float chartRangeValue = Math.abs(mMaxChartHeightValue - mMinChartHeightValue);
         float dataRangeValue = Math.abs(mMaxHeight - mMinHeight);
-        Log.i("testValue", "mMaxChartHeightValue: " + mMaxChartHeightValue + ", mMinChartHeightValue: " + mMinChartHeightValue);
-        Log.i("testValue", "chartRangeValue: " + chartRangeValue + ", dataRangeValue: " + dataRangeValue);
+//        Log.i("testValue", "mMaxChartHeightValue: " + mMaxChartHeightValue + ", mMinChartHeightValue: " + mMinChartHeightValue);
+//        Log.i("testValue", "chartRangeValue: " + chartRangeValue + ", dataRangeValue: " + dataRangeValue);
 
         //tìm giá trị bắt đầu của label
         int startDataValue = (int) Math.floor(mMinHeight / 10f) * 10;
-        Log.i("testValue", "startDataValue: " + startDataValue);
+//        Log.i("testValue", "startDataValue: " + startDataValue);
 
         //tìm giá trị bắt đầu của label trong chart
         float chartRange = Math.abs(top - bottom);
         float dataRange = chartRange * 0.8f;
         float padding = Math.abs(chartRange - dataRange) / 2;
         float startChart = bottom - padding;
-        Log.i("testValue", "startChart: " + startChart + ", dataRange: " + dataRange);
+//        Log.i("testValue", "startChart: " + startChart + ", dataRange: " + dataRange);
 
         float oneDataUnitInChart = dataRange / dataRangeValue;
-        Log.i("testValue", "oneDataUnitInChart: " + oneDataUnitInChart);
+//        Log.i("testValue", "oneDataUnitInChart: " + oneDataUnitInChart);
 
         startChart = startChart + Math.abs(mMinChartHeightValue - startDataValue) * oneDataUnitInChart;
-        Log.i("testValue", "startChart: " + startChart + ", mYRange: " + mYRange);
+//        Log.i("testValue", "startChart: " + startChart + ", mYRange: " + mYRange);
 
         int value;
         float y;
@@ -138,7 +169,9 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
             if (y <= top) {
                 break;
             } else {
-                labelData.add(new ILabelData(value, y));
+                if (y >= top + 30 && y <= bottom - 30) {
+                    mYLabelData.add(new ILabelData(value, y));
+                }
             }
         }
     }
@@ -157,7 +190,7 @@ public class CandleDataSet extends BaseDataSet<ICandleData> {
             range = (float) Math.floor(rawRange * 10);
             range /= 10;
         }
-        Log.i("testValue", "rawRange: " + rawRange + ", range: " + range);
+//        Log.i("testValue", "rawRange: " + rawRange + ", range: " + range);
 
         mYRange = range;
 

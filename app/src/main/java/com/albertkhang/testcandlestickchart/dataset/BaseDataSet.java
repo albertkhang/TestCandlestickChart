@@ -98,22 +98,36 @@ public abstract class BaseDataSet<T extends IData> {
     protected float mMinChartHeightValue;
 
     /**
-     * contain label data
+     * contain Y label data
      */
-    protected ArrayList<ILabelData> labelData;
+    protected ArrayList<ILabelData> mYLabelData;
+
+    /**
+     * contain X label data
+     */
+    protected ArrayList<ILabelData> mXLabelData;
 
     public BaseDataSet() {
         this.mLabelPaint = new Paint();
         this.mBaseAxisPaint = new Paint();
         this.mGridPaint = new Paint();
+
+        this.mYLabelData = new ArrayList<>();
+        this.mXLabelData = new ArrayList<>();
     }
+
+    protected abstract void updateData(ArrayList<T> data);
 
     public ViewPortHandler getViewportHandler() {
         return mViewportHandler;
     }
 
-    public ArrayList<ILabelData> getLabelData() {
-        return labelData;
+    public ArrayList<ILabelData> getYLabelData() {
+        return mYLabelData;
+    }
+
+    public ArrayList<ILabelData> getXLabelData() {
+        return mXLabelData;
     }
 
     public void setLabelSize(float size) {
@@ -137,7 +151,7 @@ public abstract class BaseDataSet<T extends IData> {
     }
 
     public float getGridStrokeWidth() {
-        return  this.mGridPaint.getStrokeWidth();
+        return this.mGridPaint.getStrokeWidth();
     }
 
     public void setGridStrokeWidth(float width) {

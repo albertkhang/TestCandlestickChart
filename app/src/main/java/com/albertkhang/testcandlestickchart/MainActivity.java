@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 mData.clear();
                 createData();
 
-                mDataSet = new CandleDataSet(mData);
+                mDataSet.updateData(mData);
                 mChart = new CandlestickChart(getBaseContext(), mDataSet);
 
                 chart_frame.addView(mChart);
