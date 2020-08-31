@@ -19,7 +19,7 @@ public class CandlestickDataRender extends DataRender {
     }
 
     @Override
-    public void render(Canvas c) {
+    public void render(Canvas c, float posX, float posY) {
         ArrayList<ILabelData> xLabelData = mDataSet.getXLabelData();
         ArrayList<ICandleData> data = mDataSet.getData();
 
@@ -58,11 +58,11 @@ public class CandlestickDataRender extends DataRender {
             Log.i("testValue", "open: " + open + ", close: " + close);
 
             paint.setStyle(Paint.Style.FILL);
-            float x = xLabelData.get(i).getPx();
+            float x = xLabelData.get(i).getPx() + posX;
             int dataWidth = 60;
             open = Math.abs(dataRangeValue - open) * oneDataUnitInChart;
             close = Math.abs(dataRangeValue - close) * oneDataUnitInChart;
-            c.drawRect(x - dataWidth / 2, open, x + dataWidth / 2, close, paint);
+            c.drawRect(x - dataWidth / 2, open + posY, x + dataWidth / 2, close + posY, paint);
 
             //draw shadow
             paint.setStyle(Paint.Style.STROKE);
@@ -70,7 +70,8 @@ public class CandlestickDataRender extends DataRender {
             high = Math.abs(dataRangeValue - high) * oneDataUnitInChart;
             low = Math.abs(dataRangeValue - low) * oneDataUnitInChart;
 
-            c.drawLine(xLabelData.get(i).getPx(), high, xLabelData.get(i).getPx(), low, paint);
+
+            c.drawLine(x, high + posY, x, low + posY, paint);
         }
 
         c.restore();

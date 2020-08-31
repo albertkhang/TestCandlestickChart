@@ -26,6 +26,10 @@ public class ViewPortHandler {
         return mContentRect;
     }
 
+    public RectF getOffsetRect() {
+        return mOffsetRect;
+    }
+
     /**
      * set chart dimens
      * using the dimens to calculate in BaseDataSet

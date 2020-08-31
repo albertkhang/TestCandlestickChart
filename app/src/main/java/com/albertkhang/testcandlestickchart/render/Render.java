@@ -21,5 +21,5 @@ public abstract class Render<T extends BaseDataSet<? extends IData>> {
         this.mViewPortHandler = viewPortHandler;
     }
 
-    public abstract void render(Canvas c);
+    public abstract void render(Canvas c, float posX, float posY);
 }

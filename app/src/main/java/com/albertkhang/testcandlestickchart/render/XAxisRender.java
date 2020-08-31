@@ -15,7 +15,10 @@ public class XAxisRender extends AxisRender {
     }
 
     @Override
-    public void render(Canvas c) {
+    public void render(Canvas c, float posX, float posY) {
+        c.save();
+        c.clipRect(mViewPortHandler.getContentRect());
+
         ArrayList<ILabelData> xLabelData = mDataSet.getXLabelData();
         Paint paint = new Paint();
         paint.setStrokeWidth(mDataSet.getGridStrokeWidth());
@@ -26,8 +29,10 @@ public class XAxisRender extends AxisRender {
 
         float x;
         for (int i = 0; i < xLabelData.size(); i++) {
-            x = xLabelData.get(i).getPx();
+            x = xLabelData.get(i).getPx() + posX;
             c.drawLine(x, top, x, bottom, paint);
         }
+
+        c.restore();
     }
 }

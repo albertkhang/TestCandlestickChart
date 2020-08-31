@@ -11,7 +11,7 @@ public class LineDataRender extends DataRender {
     }
 
     @Override
-    public void render(Canvas c) {
+    public void render(Canvas c, float posX, float posY) {
 
     }
 }
